@@ -14,7 +14,7 @@ def draw_and_predict():
     # Rysowanie na obrazku
     def draw(event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONDOWN or (event == cv2.EVENT_MOUSEMOVE and flags == cv2.EVENT_FLAG_LBUTTON):
-            cv2.circle(img, (x, y), 15, (255, 255, 255), -1)
+            cv2.circle(img, (x, y), 15, (255, 255, 255), -2)
 
     cv2.namedWindow("Draw")
     cv2.setMouseCallback("Draw", draw)
@@ -28,7 +28,7 @@ def draw_and_predict():
             # Przeskalowanie i normalizacja obrazka
             resized_img = cv2.resize(img, (32, 32)).reshape(1, 32, 32, 1) / 255.0
             prediction = model.predict(resized_img)
-            label_map = {0: "O", 1: "X", 2: "-"}
+            label_map = {0: "human",1 : "trapezoid",2 : "pistol", 3 : "kite"}
             predicted_label = label_map[np.argmax(prediction)]
             print(f"Rozpoznany symbol: {predicted_label}")
         elif key == ord('c'):  # 'c' key to clear

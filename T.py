@@ -6,46 +6,104 @@ import random
 
 
 # Funkcje do generowania symboli z losowością
-def generate_O():
+
+def generate_trapezoid():
     image = np.zeros((32, 32), dtype=np.uint8)
-    center_x, center_y = random.randint(12, 20), random.randint(12, 20)
-    radius = random.randint(4, 8)
-    cv2.circle(image, (center_x, center_y), radius, (255), thickness=2)
+
+    # Definiujemy losowe współrzędne dla wierzchołków trapezu
+    # Górna podstawa (krótsza)
+    top_left_x = random.randint(10, 14)
+    top_right_x = random.randint(18, 22)
+    top_y = random.randint(5, 10)
+
+    # Dolna podstawa (dłuższa)
+    bottom_left_x = random.randint(5, 8)
+    bottom_right_x = random.randint(24, 26)
+    bottom_y = random.randint(24, 28)
+
+    # Wierzchołki trapezu
+    points = np.array([
+        [top_left_x, top_y],  # Górny lewy
+        [top_right_x, top_y],  # Górny prawy
+        [bottom_right_x, bottom_y],  # Dolny prawy
+        [bottom_left_x, bottom_y]  # Dolny lewy
+    ], np.int32)
+
+    # Przekształcamy punkty do kształtu akceptowanego przez OpenCV
+    points = points.reshape((-1, 1, 2))
+
+    # Rysujemy trapez na obrazie
+    cv2.polylines(image, [points], isClosed=True, color=(255), thickness=1)
+
     return image
 
 
+def generate_human():
+    image = np.zeros((32, 32), dtype=np.uint8)  # Tworzymy czarny obraz 32x32 pikseli
 
-def generate_X():
-    image = np.zeros((32, 32), dtype=np.uint8)
-    start_x1, start_y1 = random.randint(8, 12), random.randint(8, 12)
-    end_x1, end_y1 = random.randint(20, 24), random.randint(20, 24)
-    start_x2, start_y2 = random.randint(20, 24), random.randint(8, 12)
-    end_x2, end_y2 = random.randint(8, 12), random.randint(20, 24)
-    cv2.line(image, (start_x1, start_y1), (end_x1, end_y1), (255), thickness=2)
-    cv2.line(image, (start_x2, start_y2), (end_x2, end_y2), (255), thickness=2)
+    # Głowa (kółko)
+    center = (16, 8)
+    radius = 3
+    cv2.circle(image, center, radius, (255), thickness=1)
+
+    # Ciało (linia pionowa)
+    top_body = (16, 11)
+    bottom_body = (16, 22)
+    cv2.line(image, top_body, bottom_body, (255), thickness=1)
+
+    # Ręce (linia pozioma)
+    left_hand = (10, 15)
+    right_hand = (22, 15)
+    cv2.line(image, left_hand, right_hand, (255), thickness=1)
+
+    # Nogi (linie ukośne)
+    left_leg_top = (16, 22)
+    left_leg_bottom = (12, 30)
+    right_leg_top = (16, 22)
+    right_leg_bottom = (20, 30)
+    cv2.line(image, left_leg_top, left_leg_bottom, (255), thickness=1)
+    cv2.line(image, right_leg_top, right_leg_bottom, (255), thickness=1)
+
     return image
 
+def generate_pistol():
+    image = np.zeros((32, 32), dtype=np.uint8)  # Tworzymy czarny obraz 32x32 pikseli
 
-def generate_minus():
-    image = np.zeros((32, 32), dtype=np.uint8)
-    start_x, start_y = random.randint(8, 12), random.randint(14, 18)
-    end_x, end_y = random.randint(20, 24), random.randint(14, 18)
-    cv2.line(image, (start_x, start_y), (end_x, end_y), (255), thickness=2)
+    # Korpus pistoletu (prostokąt)
+    body_top_left = (8, 10)
+    body_bottom_right = (24, 16)
+    cv2.rectangle(image, body_top_left, body_bottom_right, (255), thickness=1)
+
+    # Lufa pistoletu (mały prostokąt)
+    barrel_top_left = (24, 12)
+    barrel_bottom_right = (30, 14)
+    cv2.rectangle(image, barrel_top_left, barrel_bottom_right, (255), thickness=1)
+
+    # Uchwyt pistoletu (ukośna linia)
+    grip_top = (10, 16)
+    grip_bottom = (6, 26)
+    cv2.line(image, grip_top, grip_bottom, (255), thickness=1)
+
     return image
 
+def generate_kite():
+    image = np.zeros((32, 32), dtype=np.uint8)  # Tworzymy czarny obraz 32x32 pikseli
 
-def generate_i():
-    image = np.zeros((32, 32), dtype=np.uint8)
-    start_x, start_y = random.randint(8, 12), random.randint(14, 18)
-    end_x, end_y = random.randint(20, 24), random.randint(14, 18)
-    cv2.line(image, (start_x, start_y), (end_x, end_y), (255), thickness=2)
-    return image
+    # Wierzchołki latawca (romb)
+    top_point = (16, 6)     # Górny punkt
+    right_point = (24, 16)  # Prawy punkt
+    bottom_point = (16, 26) # Dolny punkt
+    left_point = (8, 16)    # Lewy punkt
 
-def generate_vLine():
-    image = np.zeros((32, 32), dtype=np.uint8)
-    start_x, start_y = random.randint(14, 18), random.randint(8, 12)
-    end_x, end_y = random.randint(14, 18), random.randint(20, 24)
-    cv2.line(image, (start_x, start_y), (end_x, end_y), (255), thickness=2)
+    # Rysowanie boków latawca (romb)
+    cv2.line(image, top_point, right_point, (255), thickness=1)
+    cv2.line(image, right_point, bottom_point, (255), thickness=1)
+    cv2.line(image, bottom_point, left_point, (255), thickness=1)
+    cv2.line(image, left_point, top_point, (255), thickness=1)
+
+    # Rysowanie sznurka (linia)
+    cv2.line(image, bottom_point, (16, 31), (255), thickness=1)
+
     return image
 
 
@@ -55,18 +113,19 @@ def generate_data(num_samples):
     labels = []
 
     for _ in range(num_samples):
-        label = np.random.choice(["O", "X", "-","I","|"])
+        label = np.random.choice(["trapezoid",'human',"pistol",'kite'])
 
-        if label == "O":
-            image = generate_O()
-        elif label == "X":
-            image = generate_X()
-        elif label == "-":
-            image = generate_minus()
-        elif label == "I":
-            image = generate_i()
-        elif label == "|":
-            image = generate_vLine()
+        if label == "trapezoid":
+            image = generate_trapezoid()
+        elif label == "human":
+            image = generate_human()
+        elif label == "pistol":
+            image = generate_pistol()
+        elif label == "kite":
+            image = generate_kite()
+
+
+
 
         data.append(image)
         labels.append(label)
@@ -82,7 +141,7 @@ def generate_data(num_samples):
     labels = np.array(labels)
 
     # Konwersja etykiet na wartości numeryczne
-    label_map = {"O": 0, "X": 1, "-": 2,"|": 3}
+    label_map = {"human" : 0,"trapezoid": 1,"pistol": 2, "kite": 3}
     labels = np.vectorize(label_map.get)(labels)
 
     return data, labels
